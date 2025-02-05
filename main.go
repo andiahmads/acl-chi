@@ -50,6 +50,11 @@ func ACLMiddleware(permission []string) func(next http.Handler) http.Handler {
 	}
 }
 
+func ReadHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Read operation allowed"))
+
+}
+
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -57,9 +62,7 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.With(ACLMiddleware([]string{"read"})).Get("/read", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Read operation allowed"))
-	})
+	http.HandleFunc("/read", ReadHandler)
 
 	r.With(ACLMiddleware([]string{"read-product"})).Get("/product", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Read product done"))
