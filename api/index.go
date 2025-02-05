@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
-
-	"github.com/go-chi/chi/v5"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
