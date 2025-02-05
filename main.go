@@ -1,18 +1,24 @@
-package main
+package main // This is absolutely required
 
 import (
-	"chi-acl/handler"
-	"log"
-	"net/http"
-
-	"github.com/go-chi/chi/v5"
+	"fmt"
+	"net/http" // If you're building a web server
 )
 
-func main() {
-	r := chi.NewRouter()
+func main() { // This is the entry point
+	fmt.Println("Hello from Vercel!")
 
-	r.HandleFunc("/", handler.Handler)
-
-	log.Println("Server running on http://localhost:9999")
-	http.ListenAndServe(":9999", r)
+	// Example for a web server:
+	http.HandleFunc("/", handler) // Define your handler function
+	port := "9999"                // or get it from an environment variable
+	fmt.Printf("Server listening on port %s\n", port)
+	err := http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		fmt.Println("Error starting server:", err)
+	}
 }
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, World!")
+}
+
