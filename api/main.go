@@ -18,4 +18,3 @@ func main() {
 	log.Println("Server running on http://localhost:9999")
 	http.ListenAndServe(":9999", r)
 }
-
