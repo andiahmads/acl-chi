@@ -14,7 +14,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := chi.NewRouter()
 
-	r.Get("/", Handler)
+	r.HandleFunc("/", Handler)
 
 	log.Println("Server running on http://localhost:9999")
 	http.ListenAndServe(":9999", r)
