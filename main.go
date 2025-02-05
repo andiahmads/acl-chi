@@ -5,10 +5,9 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"net/http"
-	"os"
 )
 
-// ACLMiddleware to check permissions
+// ACLMiddleware untuk memeriksa izin akses
 func ACLMiddleware(permission []string) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -48,22 +47,23 @@ func ACLMiddleware(permission []string) func(next http.Handler) http.Handler {
 	}
 }
 
-// main handler function
-func mainHandler(w http.ResponseWriter, r *http.Request) {
+// Fungsi ini akan menangani rute / untuk aplikasi
+func Handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Hello, Vercel!")
 }
 
-// Vercel entry point function
-func Handler(w http.ResponseWriter, r *http.Request) {
+// Fungsi entry point yang harus diekspor untuk Vercel
+func main() {
 	routes := chi.NewRouter()
 	routes.Use(middleware.RequestID)
 	routes.Use(middleware.RealIP)
 	routes.Use(middleware.Logger)
 	routes.Use(middleware.Recoverer)
 
-	routes.Get("/", mainHandler)
+	// Rute utama
+	routes.Get("/", Handler)
 
-	// Apply ACL middleware for routes with permission checks
+	// Rute dengan middleware ACL
 	routes.With(ACLMiddleware([]string{"read"})).Get("/read", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Read operation allowed"))
 	})
@@ -76,7 +76,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Write operation allowed"))
 	})
 
+	port := "9999"
+	// Menjalankan server
 	http.Handle("/", routes)
-	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	http.ListenAndServe(":"+port, nil)
 }
 
