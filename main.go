@@ -50,9 +50,8 @@ func ACLMiddleware(permission []string) func(next http.Handler) http.Handler {
 	}
 }
 
-func ReadHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Read operation allowed"))
-
+func Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Hello from Go!</h1>")
 }
 
 func main() {
@@ -62,7 +61,7 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	http.HandleFunc("/read", ReadHandler)
+	r.Get("/read", Handler)
 
 	r.With(ACLMiddleware([]string{"read-product"})).Get("/product", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Read product done"))
