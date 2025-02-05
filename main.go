@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
+	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -15,7 +17,6 @@ var rolesPermissions = map[string][]string{
 func ACLMiddleware(permission []string) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// return http.HandleFunc(func(w http.ResponseWriter, r *http.Request) {
 			userRole := "user"
 
 			requiredPermissions := make(map[string]bool)
@@ -51,6 +52,10 @@ func ACLMiddleware(permission []string) func(next http.Handler) http.Handler {
 
 func main() {
 	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
 	r.With(ACLMiddleware([]string{"read"})).Get("/read", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Read operation allowed"))
@@ -64,6 +69,8 @@ func main() {
 		w.Write([]byte("Write operation allowed"))
 	})
 
+	port := 9999
+	log.Printf("server running on port:%d", port)
 	http.ListenAndServe(":9999", r)
 
 }
