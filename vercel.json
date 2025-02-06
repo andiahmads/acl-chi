@@ -7,10 +7,9 @@
     }
   ],
   "routes": [
-    "source": "/api/((?!general).*)",
-    "destination": "/api/index.go"
-}
+    {
+      "source": "/api/((?!general).*)",
+      "destination": "/api/index.go"
     }
   ]
 }
-
