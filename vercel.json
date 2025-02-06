@@ -7,9 +7,9 @@
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/main.go"
+    "source": "/api/((?!general).*)",
+    "destination": "/api/index.go"
+}
     }
   ]
 }

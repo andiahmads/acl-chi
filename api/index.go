@@ -14,7 +14,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.HandleFunc("/hello", handler)
+	r.HandleFunc("api/hello", handler)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))
 	})
